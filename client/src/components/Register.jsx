@@ -18,8 +18,6 @@ function Register({ setUpdate, book, setModalId }) {
   const navigate = useNavigate();
 
   if (book) {
-    console.log(book);
-    
     const {title, author, price, cover, category} = book    
     setValue("title", title);
     setValue("author", author);
@@ -31,7 +29,8 @@ function Register({ setUpdate, book, setModalId }) {
   const formSubmitHandler = async (data) => {
     try {
       if (book) {
-        await updateOne(book.id, data);
+        
+        await updateOne(book.id, {...data, reserved: book.reserved});
         setModalId("");
       } else {
         await postData({ ...data, reserved: false });
@@ -140,13 +139,7 @@ function Register({ setUpdate, book, setModalId }) {
                 type="text"
                 id="cover"
                 {...register("cover", {
-                  required: "Cover is required.",
-                  pattern: {
-                    value:
-                    // nesamoningas patternas
-                      /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
-                    message: "Invalid cover URL",
-                  },
+                  required: "Cover is required."
                 })}
               />
             </div>

@@ -7,7 +7,7 @@ function Book({ book, setUpdate, modalId, setModalId }) {
 
   const reserveHandler = async () => {
     const { reserved } = await getOne(id);
-    await updateOne(id, { reserved: !reserved });
+    await updateOne(id, {...book, reserved: !reserved });
     setUpdate((prevState) => prevState + 1);
   };
 

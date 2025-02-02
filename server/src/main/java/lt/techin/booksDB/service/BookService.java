@@ -21,6 +21,10 @@ public class BookService {
     return bookRepository.findAll();
   }
 
+  public Book findBookById(long id) {
+    return bookRepository.findById(id).get();
+  }
+
   public Book saveBook(Book book) {
     return bookRepository.save(book);
   }
@@ -29,6 +33,7 @@ public class BookService {
     return bookRepository.saveAll(books);
   }
 
-  public boolean exists
-
+  public boolean existsBookById(long id) {
+    return bookRepository.existsById(id);
+  }
 }

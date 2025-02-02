@@ -27,6 +27,15 @@ public class BookController {
     return ResponseEntity.ok(bookService.findAllBooks());
   }
 
+  @GetMapping("/books/{id}")
+  public ResponseEntity<Book> getBookById(@PathVariable long id) {
+    if (!bookService.existsBookById(id)) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(bookService.findBookById(id));
+  }
+
   @PostMapping("/book")
   public ResponseEntity<Book> saveBook(@RequestBody Book book) {
     Book savedBook = bookService.saveBook(book);
@@ -55,6 +64,26 @@ public class BookController {
 
   @PutMapping("/books/{id}")
   public ResponseEntity<Book> updateBook(@PathVariable long id, @RequestBody Book book) {
-    if (bookService.e)
+    if (bookService.existsBookById(id)) {
+      Book BookFromDb = bookService.findBookById(id);
+
+      BookFromDb.setAuthor(book.getAuthor());
+      BookFromDb.setCategory(book.getCategory());
+      BookFromDb.setTitle(book.getTitle());
+      BookFromDb.setCover(book.getCover());
+      BookFromDb.setPrice(book.getPrice());
+      BookFromDb.setReserved(book.getReserved());
+
+      return ResponseEntity.ok(bookService.saveBook(BookFromDb));
+    }
+
+    Book savedBook = bookService.saveBook(book);
+
+    return ResponseEntity.created(
+            ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/api/books/{id}")
+                    .buildAndExpand(savedBook.getId())
+                    .toUri()
+    ).body(savedBook);
   }
 }
